@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Tracker - Report Bug</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="admin.html">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1>Bug Tracker</h1>
+            <div class="nav-right">
+                
+                <a href="index.html" class="btn btn-primary">Back to Login</a>
+                <button id="logoutBtn" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="report-box">
+            <h2>Report a New Bug</h2>
+            <form id="bugReportForm">
+                <div class="form-group">
+                    <label for="title">Bug Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" rows="6" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="priority">Priority *</label>
+                    <select id="priority" name="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reporter">Your Name *</label>
+                    <input type="text" id="reporter" name="reporter" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Bug Report</button>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  
+
+    <script>
+        // Save form data to localStorage on submit
+        document.getElementById('bugReportForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+    
+        // Get form values
+        const bugData = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        priority: document.getElementById('priority').value,
+        reporter: document.getElementById('reporter').value,
+        timestamp: new Date().toISOString()
+        };
+    
+        // Store in localStorage (as JSON string)
+        // You can either replace or create an array to store multiple submissions
+        localStorage.setItem('lastBugReport', JSON.stringify(bugData));
+    
+        // Or store multiple reports in an array:
+        let allBugs = JSON.parse(localStorage.getItem('bugReports')) || [];
+        allBugs.push(bugData);
+        localStorage.setItem('bugReports', JSON.stringify(allBugs));
+    
+        alert('Bug report saved!');
+    });
+
+    // Retrieve and use the data later
+    function loadSavedBugReport() {
+    const saved = localStorage.getItem('lastBugReport');
+        if (saved) {
+        const bugData = JSON.parse(saved);
+        console.log(bugData); // Use this data however you need
+        }
+    }
+    </script>
+</body>
+</html>

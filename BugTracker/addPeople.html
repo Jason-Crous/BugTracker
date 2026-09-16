@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add People To Project</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.html">
+    
+    <link rel="icon" type="image/x-icon" href="Images/debugging.png">
+
+    <style>
+        .nav-container img{
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1>Bug Tracker</h1>
+                <div class="nav-right">
+                    <a href="admin.html" class="btn btn-secondary">Back to Dashboard</a>
+                    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Left: People List -->
+            <div class="peopleList-box">
+                <div class="people-section">
+                    <h3>Available</h3>
+                    <button id="addNewPersonBtn" class="btn btn-primary" style="margin-bottom: 15px; width: 100%;">+ Add New Person</button>
+                    <ul id="availablePeopleList" class="people-list">
+                        <li data-person="Bob Sponge"><img src="Images/boy.png" alt="Avatar"><span>Bob Sponge</span></li>
+                        <li data-person="Smith Will"><img src="Images/people.png" alt="Avatar"><span>Smith Will</span></li>
+                        <li data-person="Brown Chris"><img src="Images/woman.png" alt="Avatar"><span>Brown Chris</span></li>
+                        <li data-person="Diana Princess"><img src="Images/girl.png" alt="Avatar"><span>Diana Princess</span></li>
+                    </ul>
+                </div>
+                <div class="people-section">
+                    <h3>Unavailable</h3>
+                    <ul id="unavailablePeopleList" class="people-list unavailable">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Center: Add People Form -->
+            <div class="addPeople-box">
+                <h2>Add People To Project</h2>
+                <form id="addPeopleForm">
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectName" name="projectName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="personName">Person Name *</label>
+                        <input type="text" id="personName" name="personName" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Person</button>
+                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                </form>
+            </div>
+
+            <!-- Right: Active Projects -->
+            <div class="projects-box">
+                <h3>Active Projects</h3>
+                <div id="activeProjectsContainer" class="active-projects-container">
+                    <!-- Active project cards will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Adding New Person -->
+        <div id="addPersonModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal" id="closeModal">&times;</span>
+                <h2>Add New Person</h2>
+                <form id="newPersonForm">
+                    <div class="form-group">
+                        <label for="personId">ID *</label>
+                        <input type="text" id="personId" name="personId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="personFirstName">Name *</label>
+                        <input type="text" id="personFirstName" name="personFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="personSurname">Surname *</label>
+                        <input type="text" id="personSurname" name="personSurname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="personEmail">Email *</label>
+                        <input type="email" id="personEmail" name="personEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="personUsername">Username *</label>
+                        <input type="text" id="personUsername" name="personUsername" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Person</button>
+                        <button type="button" class="btn btn-secondary" id="cancelPersonBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <script>
+            // People list management
+            const addPeopleForm = document.getElementById('addPeopleForm');
+            const personNameInput = document.getElementById('personName');
+            const availablePeopleList = document.getElementById('availablePeopleList');
+            const unavailablePeopleList = document.getElementById('unavailablePeopleList');
+            const activeProjectsContainer = document.getElementById('activeProjectsContainer');
+            
+            // Modal elements
+            const addPersonModal = document.getElementById('addPersonModal');
+            const addNewPersonBtn = document.getElementById('addNewPersonBtn');
+            const closeModal = document.getElementById('closeModal');
+            const cancelPersonBtn = document.getElementById('cancelPersonBtn');
+            const newPersonForm = document.getElementById('newPersonForm');
+
+            // Track added people
+            let addedPeople = JSON.parse(localStorage.getItem('addedPeople')) || [];
+
+            // Hardcoded initial people (will be merged with stored people)
+            const initialPeople = [
+                { id: '1', name: 'Bob', surname: 'Sponge', email: 'bob@example.com', username: 'bobsponge', avatar: 'Images/boy.png' },
+                { id: '2', name: 'Smith', surname: 'Will', email: 'smith@example.com', username: 'smithwill', avatar: 'Images/people.png' },
+                { id: '3', name: 'Brown', surname: 'Chris', email: 'brown@example.com', username: 'brownchris', avatar: 'Images/woman.png' },
+                { id: '4', name: 'Diana', surname: 'Princess', email: 'diana@example.com', username: 'dianaprincess', avatar: 'Images/girl.png' }
+            ];
+
+            // Get all people (initial + stored)
+            function getAllPeople() {
+                const storedPeople = JSON.parse(localStorage.getItem('peopleDatabase')) || [];
+                return [...initialPeople, ...storedPeople];
+            }
+
+            // Modal functions
+            function openModal() {
+                addPersonModal.style.display = 'block';
+            }
+
+            function closeModalFunc() {
+                addPersonModal.style.display = 'none';
+                newPersonForm.reset();
+            }
+
+            // Event listeners for modal
+            addNewPersonBtn.addEventListener('click', openModal);
+            closeModal.addEventListener('click', closeModalFunc);
+            cancelPersonBtn.addEventListener('click', closeModalFunc);
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === addPersonModal) {
+                    closeModalFunc();
+                }
+            });
+
+            // Handle new person form submission
+            newPersonForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const newPerson = {
+                    id: document.getElementById('personId').value.trim(),
+                    name: document.getElementById('personFirstName').value.trim(),
+                    surname: document.getElementById('personSurname').value.trim(),
+                    email: document.getElementById('personEmail').value.trim(),
+                    username: document.getElementById('personUsername').value.trim(),
+                    avatar: 'Images/people.png' // Default avatar for new people
+                };
+
+                // Store in localStorage
+                let peopleDatabase = JSON.parse(localStorage.getItem('peopleDatabase')) || [];
+                peopleDatabase.push(newPerson);
+                localStorage.setItem('peopleDatabase', JSON.stringify(peopleDatabase));
+
+                // Update UI and close modal
+                updatePeopleList();
+                renderActiveProjects();
+                closeModalFunc();
+
+                alert('Person added successfully!');
+            });
+
+            // Render active projects
+            function renderActiveProjects() {
+                let projects = JSON.parse(localStorage.getItem('projects')) || [];
+                let addedPeopleData = JSON.parse(localStorage.getItem('addedPeople')) || [];
+                
+                if (projects.length === 0) {
+                    activeProjectsContainer.innerHTML = '<p class="no-projects">No projects available</p>';
+                    return;
+                }
+
+                let html = '';
+                projects.forEach(p => {
+                    const assignedPeople = addedPeopleData.filter(ap => ap.project === p.name);
+                    html += `
+                        <div class="project-card">
+                            <h4>${p.name}</h4>
+                            <p>${p.description}</p>
+                            <div class="project-card-meta">
+                                <span><b>Owner:</b> ${p.owner}</span>
+                                <span><b>Status:</b> <span class="status-badge ${p.status}">${p.status}</span></span>
+                            </div>
+                            ${assignedPeople.length > 0 ? `
+                                <div class="project-card-people">
+                                    <b>Team:</b> ${assignedPeople.map(ap => ap.name).join(', ')}
+                                </div>
+                            ` : '<div class="project-card-people"><b>No team members</b></div>'}
+                        </div>
+                    `;
+                });
+                activeProjectsContainer.innerHTML = html;
+            }
+
+            // Update people list based on added people
+            function updatePeopleList() {
+                const allPeople = getAllPeople();
+                availablePeopleList.innerHTML = '';
+                unavailablePeopleList.innerHTML = '';
+
+                allPeople.forEach(person => {
+                    const isAdded = addedPeople.some(p => p.name === `${person.name} ${person.surname}`);
+                    const fullName = `${person.name} ${person.surname}`;
+                    const avatar = person.avatar || 'Images/people.png';
+                    
+                    const li = document.createElement('li');
+                    li.dataset.person = fullName;
+                    li.innerHTML = `<img src="${avatar}" alt="Avatar"><span>${fullName}</span>`;
+                    
+                    if (isAdded) {
+                        li.classList.add('unavailable');
+                        unavailablePeopleList.appendChild(li);
+                    } else {
+                        availablePeopleList.appendChild(li);
+                    }
+                });
+            }
+
+            // Listen to input changes
+            personNameInput.addEventListener('input', () => {
+                // This provides real-time feedback as user types
+            });
+
+            // Handle form submission
+            addPeopleForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const projectName = document.getElementById('projectName').value.trim();
+                const personName = document.getElementById('personName').value.trim();
+                
+                if (projectName && personName) {
+                    // Add to localStorage
+                    addedPeople.push({ project: projectName, name: personName, addedAt: new Date().toISOString() });
+                    localStorage.setItem('addedPeople', JSON.stringify(addedPeople));
+                    
+                    // Update UI
+                    updatePeopleList();
+                    renderActiveProjects();
+                    addPeopleForm.reset();
+                }
+            });
+
+            // Initialize on page load
+            window.addEventListener('load', () => {
+                renderActiveProjects();
+                updatePeopleList();
+            });
+        </script>
+
+        <footer>
+            <p>&copy; 2026 Bug Tracker. All rights reserved.</p>
+        </footer>
+</body>
+</html>

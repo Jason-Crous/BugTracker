@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Tracker - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="report-bug.html" rel="stylesheet">
+    <link href="Create-Project.html" rel="stylesheet">
+   
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1>Bug Tracker Admin</h1>
+            <div class="nav-right">
+                <span id="welcomeMsg"></span>
+                <a href="Create-Project.html" class="btn btn-create">Create Project</a>
+                <a href="report-bug.html" class="btn btn-secondary">Report New Bug</a>
+                <a href="addPeople.html" class="btn btn-primary">Add People</a>
+                <button id="logoutBtn" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard">
+            <h2>Bug Reports</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="open">Open</button>
+                <button class="filter-btn" data-filter="in-progress">In Progress</button>
+                <button class="filter-btn" data-filter="resolved">Resolved</button>
+            </div>
+            <div id="bugList" class="bug-list"></div>
+        </div>
+    </div>
+
+    <div id="card-container">
+        <div class="card1"></div>
+        <div class="card2"></div>
+        <div class="card3"></div>
+        <div class="card4"></div>
+    </div>
+
+
+
+    <div class="footer">
+        <p>&copy; 2026 Bug Tracker. All rights reserved.</p>
+    </div>
+    <script>
+        // Get filter buttons and card container
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cardContainer = document.getElementById('card-container');
+        let allBugData = []; // Populated from localStorage or API
+
+        // Handle filter button clicks
+        filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+        // Update active button
+        filterBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Get selected filter
+        const filterType = this.dataset.filter;
+        
+        // Filter and display data
+        displayLatestCards(filterType);
+    });
+});
+
+// Display latest 4 entries for selected filter
+function displayLatestCards(filterType) {
+    let filtered = allBugData;
+    
+    // Apply filter
+    if (filterType !== 'all') {
+        filtered = allBugData.filter(bug => bug.status === filterType);
+    }
+    
+    // Get latest 4 (sort by timestamp descending)
+    const latest4 = filtered
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 4);
+    
+    // Populate cards
+    const cards = cardContainer.querySelectorAll('[class^="card"]');
+    cards.forEach((card, index) => {
+        if (latest4[index]) {
+            const bug = latest4[index];
+            card.innerHTML = `
+                <div class="card-content">
+                    <h3>${bug.title}</h3>
+                    <p>${bug.description}</p>
+                    <div class="card-meta">
+                        <span class="priority ${bug.priority}"><b>Priority:</b> ${bug.priority}</span>
+                        <span class="reporter"><b>Reported by:</b> ${bug.reporter}</span>
+                        <span class="timestamp"><b>Reported on:</b> ${new Date(bug.timestamp).toLocaleString()}</span>
+                        <span class="status"><b>Status:</b> ${bug.status}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            card.innerHTML = '<p>No data</p>';
+        }
+    });
+}
+
+// function for judging each bug report and assigning it to each filter type,
+// based on the current active filter types, the page will display the bugs associated
+    function assignFilterType(bug) {
+        let filterStatus = document.querySelector('.filter-btn.active').dataset.filter;
+        if (filterStatus === 'all') {  
+            return 'all';
+        } else if (bug.status === filterStatus) {
+            return filterStatus;
+        } else {
+            return 'other';
+        }
+        // 
+        if (bug.status === 'open') {
+            return 'open';
+        } else if (bug.status === 'in-progress') {
+            return 'in-progress';
+        } else if (bug.status === 'resolved') {
+            return 'resolved';
+        } else {
+            return 'other';
+        }
+    }
+
+    function filterBugsByStatus(status) {
+        // Read all bug data from localStorage and assign a status based on certain keywords used to describe the bug report
+        // , then filter the data based on the assigned status and return the filtered data to be displayed
+        //  on the page
+        // ...
+
+        let allBugData = JSON.parse(localStorage.getItem('bugReports')) || [];
+        if (allBugData.length === 0) {
+            return [];
+        }
+        // Assign status based on keywords
+        allBugData = assignStatusBasedOnKeywords(allBugData);
+        if (status === 'all') {
+            return allBugData;
+        } else {
+            return allBugData.filter(bug => bug.status === status);
+        }
+    }
+
+    // Function to assign status based on keywords in description
+    function assignStatusBasedOnKeywords(bugData) {
+        return bugData.map(bug => {
+            const desc = bug.description.toLowerCase();
+            if (desc.includes('crash')) {
+                bug.status = 'in-progress';
+            } else if (desc.includes('drivers') || desc.includes('update')) {
+                bug.status = 'open';
+            }else if (desc.includes('fixed') || desc.includes('resolved')) {
+                bug.status = 'resolved';
+            } else {
+                bug.status = 'open'; // Default to open if no keywords found
+            }
+            // If no keywords, keep existing status
+            return bug;
+        });
+    }
+
+    // Load data from localStorage on page load
+    window.addEventListener('load', function() {
+    allBugData = JSON.parse(localStorage.getItem('bugReports')) || [];  
+    // Assign status based on keywords
+    allBugData = assignStatusBasedOnKeywords(allBugData);
+    // Update localStorage with new statuses
+    localStorage.setItem('bugReports', JSON.stringify(allBugData));
+    displayLatestCards('all'); // Show all by default
+    });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        // Display welcome message
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcomeMsg').textContent = `Welcome, ${username}!`;
+        } else {
+            window.location.href = 'index.html'; // Redirect to login if no username
+        }
+
+    </script>
+</body>
+</html>

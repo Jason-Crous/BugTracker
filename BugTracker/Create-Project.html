@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+     <nav class="navbar">
+        <div class="nav-container">
+            <h1>Bug Tracker</h1>
+            <div class="nav-right">
+                <a href="admin.html" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="addPeople.html" class="btn btn-primary">Add People</a>
+                <button id="logoutBtn" class="btn btn-danger">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <h2>Current Projects</h2>
+    </div>
+    
+    <div id="projectsContainer">
+      <!-- Projects will be rendered here -->
+    </div>
+  </div>
+
+  <button id="createProjectBtn" class="btn btn-create">Create Project</button>
+
+  <div id="projectFormBox" class="report-box hidden">
+    <h2>New Project</h2>
+    <form id="projectForm">
+      <div class="form-group">
+        <label for="projectName">Project Name *</label>
+        <input type="text" id="projectName" required>
+      </div>
+      <div class="form-group">
+        <label for="projectDescription">Description *</label>
+        <textarea id="projectDescription" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="projectOwner">Project Owner *</label>
+        <input type="text" id="projectOwner" required>
+      </div>
+      <div class="form-group">
+        <label for="projectStatus">Status *</label>
+        <select id="projectStatus" required>
+          <option value="planning">Planning</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="on-standby">On Standby</option>
+          
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Project</button>
+        <button type="button" id="viewProjectsBtn" class="btn btn-secondary">View Projects</button>
+        <button type="button" id="cancelProjectBtn" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+    
+  </div>
+</div>
+
+    <div class="footer">
+        <p>&copy; 2026 Bug Tracker. All rights reserved.</p>
+    </div>
+
+    <script>
+    const createProjectBtn = document.getElementById('createProjectBtn');
+    const cancelProjectBtn = document.getElementById('cancelProjectBtn');
+    const viewProjectsBtn = document.getElementById('viewProjectsBtn');
+    const projectFormBox = document.getElementById('projectFormBox');
+    const projectForm = document.getElementById('projectForm');
+    const projectsContainer = document.getElementById('projectsContainer');
+
+    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+
+function renderProjectCards() {
+  const activeProjects = projects.filter(p => p.status === 'active');
+  const AllProjects = projects.filter(p => p.status !== 'active');
+
+  const addedPeople = JSON.parse(localStorage.getItem('addedPeople')) || [];
+
+  let html = ''; // Clear existing content
+
+  if (activeProjects.length > 0) {
+    html += '<h3>Active Projects</h3><div class="project-list">';
+    activeProjects.forEach(p => {
+      const assignedPeople = addedPeople.filter(ap => ap.project === p.name);
+      html += `
+        <div class="card">
+          <div class="card-content">
+            <h4>${p.name}</h4>
+            <p>${p.description}</p>
+            <div class="card-meta">
+              <span><b>Owner:</b> ${p.owner}</span>
+              <span><b>Status:</b> ${p.status}</span>
+            </div>
+            ${assignedPeople.length > 0 ? `
+              <div class="assigned-people">
+                <b>Assigned People:</b>
+                <ul class="people-assigned-list">
+                  ${assignedPeople.map(ap => `<li>${ap.name}</li>`).join('')}
+                </ul>
+              </div>
+            ` : '<div class="assigned-people"><b>No people assigned</b></div>'}
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+
+  if (AllProjects.length > 0) {
+    html += '<h3>All Projects</h3><div class="project-list">';
+    AllProjects.forEach(p => {
+      const assignedPeople = addedPeople.filter(ap => ap.project === p.name);
+      html += `
+        <div class="card">
+          <div class="card-content">
+            <h4>${p.name}</h4>
+            <p>${p.description}</p>
+            <div class="card-meta">
+              <span><b>Owner:</b> ${p.owner}</span>
+              <span><b>Status:</b> ${p.status}</span>
+            </div>
+            ${assignedPeople.length > 0 ? `
+              <div class="assigned-people">
+                <b>Assigned People:</b>
+                <ul class="people-assigned-list">
+                  ${assignedPeople.map(ap => `<li>${ap.name}</li>`).join('')}
+                </ul>
+              </div>
+            ` : '<div class="assigned-people"><b>No people assigned</b></div>'}
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+
+  if (html === '') {
+    html = '<p>No projects</p>';
+  }
+
+  projectsContainer.innerHTML = html;
+}
+
+function toggleForm(show) {
+  projectFormBox.classList.toggle('hidden', !show);
+  projectsContainer.classList.toggle('form-open', show);
+}
+
+createProjectBtn.addEventListener('click', () => toggleForm(true));
+cancelProjectBtn.addEventListener('click', () => toggleForm(false));
+viewProjectsBtn.addEventListener('click', () => toggleForm(false));
+
+projectForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const newProject = {
+    id: Date.now(),
+    name: document.getElementById('projectName').value.trim(),
+    description: document.getElementById('projectDescription').value.trim(),
+    owner: document.getElementById('projectOwner').value.trim(),
+    status: document.getElementById('projectStatus').value,
+    createdAt: new Date().toISOString()
+  };
+
+  projects.unshift(newProject);
+  localStorage.setItem('projects', JSON.stringify(projects));
+  renderProjectCards();
+  projectForm.reset();
+  toggleForm(false);
+});
+
+window.addEventListener('load', () => {
+  renderProjectCards();
+  toggleForm(false);
+});
+</script>   
+</body>
+</html>
