@@ -1,0 +1,27 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#f3f5fb"/>
+  <rect x="0" y="0" width="1200" height="80" fill="#ffffff"/>
+  <text x="70" y="52" font-family="Segoe UI, Arial" font-size="26" font-weight="700" fill="#4f5bd5">Bug Tracker</text>
+  <rect x="960" y="18" width="150" height="38" rx="8" fill="#dc3545"/>
+  <text x="1035" y="43" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" font-weight="600" fill="#fff">Logout</text>
+
+  <rect x="250" y="120" width="700" height="620" rx="16" fill="#ffffff" stroke="#e6e8ef"/>
+  <text x="600" y="175" text-anchor="middle" font-family="Segoe UI, Arial" font-size="34" font-weight="700" fill="#1f2937">Report a New Bug</text>
+
+  <text x="320" y="240" font-family="Segoe UI, Arial" font-size="18" fill="#374151">Bug Title *</text>
+  <rect x="320" y="255" width="560" height="46" rx="8" fill="#f4f5f7" stroke="#dfe3eb"/>
+
+  <text x="320" y="330" font-family="Segoe UI, Arial" font-size="18" fill="#374151">Description *</text>
+  <rect x="320" y="345" width="560" height="120" rx="8" fill="#f4f5f7" stroke="#dfe3eb"/>
+
+  <text x="320" y="500" font-family="Segoe UI, Arial" font-size="18" fill="#374151">Priority *</text>
+  <rect x="320" y="515" width="560" height="46" rx="8" fill="#f4f5f7" stroke="#dfe3eb"/>
+
+  <text x="320" y="590" font-family="Segoe UI, Arial" font-size="18" fill="#374151">Your Name *</text>
+  <rect x="320" y="605" width="560" height="46" rx="8" fill="#f4f5f7" stroke="#dfe3eb"/>
+
+  <rect x="320" y="680" width="180" height="40" rx="10" fill="#667eea"/>
+  <text x="410" y="706" text-anchor="middle" font-family="Segoe UI, Arial" font-size="16" font-weight="600" fill="#fff">Submit Bug Report</text>
+  <rect x="520" y="680" width="120" height="40" rx="10" fill="#6c757d"/>
+  <text x="580" y="706" text-anchor="middle" font-family="Segoe UI, Arial" font-size="16" font-weight="600" fill="#fff">Clear Form</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#f3f5fb"/>
+  <rect x="0" y="0" width="1200" height="80" fill="#ffffff"/>
+  <text x="70" y="52" font-family="Segoe UI, Arial" font-size="26" font-weight="700" fill="#4f5bd5">Bug Tracker Admin</text>
+  <rect x="780" y="18" width="120" height="38" rx="8" fill="#28a745"/>
+  <text x="840" y="43" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" font-weight="600" fill="#fff">Create Project</text>
+  <rect x="915" y="18" width="120" height="38" rx="8" fill="#6c757d"/>
+  <text x="975" y="43" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" font-weight="600" fill="#fff">Report Bug</text>
+  <rect x="1055" y="18" width="90" height="38" rx="8" fill="#dc3545"/>
+  <text x="1100" y="43" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" font-weight="600" fill="#fff">Logout</text>
+
+  <text x="90" y="150" font-family="Segoe UI, Arial" font-size="30" font-weight="700" fill="#1f2937">Bug Reports</text>
+  <rect x="90" y="180" width="110" height="36" rx="18" fill="#667eea"/>
+  <text x="145" y="203" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" fill="#fff">All</text>
+  <rect x="220" y="180" width="110" height="36" rx="18" fill="#eef2ff"/>
+  <text x="275" y="203" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" fill="#333">Open</text>
+  <rect x="350" y="180" width="150" height="36" rx="18" fill="#eef2ff"/>
+  <text x="425" y="203" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" fill="#333">In Progress</text>
+  <rect x="520" y="180" width="120" height="36" rx="18" fill="#eef2ff"/>
+  <text x="580" y="203" text-anchor="middle" font-family="Segoe UI, Arial" font-size="14" fill="#333">Resolved</text>
+
+  <g>
+    <rect x="90" y="250" width="240" height="180" rx="12" fill="#ffffff" stroke="#dfe3eb"/>
+    <text x="110" y="285" font-family="Segoe UI, Arial" font-size="22" font-weight="700" fill="#1f2937">Login issue</text>
+    <text x="110" y="315" font-family="Segoe UI, Arial" font-size="14" fill="#555">User cannot log in with valid ...</text>
+    <text x="110" y="360" font-family="Segoe UI, Arial" font-size="13" fill="#444">Priority: High</text>
+    <text x="110" y="385" font-family="Segoe UI, Arial" font-size="13" fill="#444">Reporter: user123</text>
+    <text x="110" y="410" font-family="Segoe UI, Arial" font-size="13" fill="#444">Status: Open</text>
+  </g>
+  <g>
+    <rect x="350" y="250" width="240" height="180" rx="12" fill="#ffffff" stroke="#dfe3eb"/>
+    <text x="370" y="285" font-family="Segoe UI, Arial" font-size="22" font-weight="700" fill="#1f2937">Crash on startup</text>
+    <text x="370" y="315" font-family="Segoe UI, Arial" font-size="14" fill="#555">Application crashes during ...</text>
+    <text x="370" y="360" font-family="Segoe UI, Arial" font-size="13" fill="#444">Priority: Critical</text>
+    <text x="370" y="385" font-family="Segoe UI, Arial" font-size="13" fill="#444">Reporter: admin</text>
+    <text x="370" y="410" font-family="Segoe UI, Arial" font-size="13" fill="#444">Status: In Progress</text>
+  </g>
+  <g>
+    <rect x="610" y="250" width="240" height="180" rx="12" fill="#ffffff" stroke="#dfe3eb"/>
+    <text x="630" y="285" font-family="Segoe UI, Arial" font-size="22" font-weight="700" fill="#1f2937">UI spacing issue</text>
+    <text x="630" y="315" font-family="Segoe UI, Arial" font-size="14" fill="#555">Buttons overlap on narrow ...</text>
+    <text x="630" y="360" font-family="Segoe UI, Arial" font-size="13" fill="#444">Priority: Medium</text>
+    <text x="630" y="385" font-family="Segoe UI, Arial" font-size="13" fill="#444">Reporter: tester</text>
+    <text x="630" y="410" font-family="Segoe UI, Arial" font-size="13" fill="#444">Status: Resolved</text>
+  </g>
+  <g>
+    <rect x="870" y="250" width="240" height="180" rx="12" fill="#ffffff" stroke="#dfe3eb"/>
+    <text x="890" y="285" font-family="Segoe UI, Arial" font-size="22" font-weight="700" fill="#1f2937">Database timeout</text>
+    <text x="890" y="315" font-family="Segoe UI, Arial" font-size="14" fill="#555">Connection timing out after ...</text>
+    <text x="890" y="360" font-family="Segoe UI, Arial" font-size="13" fill="#444">Priority: High</text>
+    <text x="890" y="385" font-family="Segoe UI, Arial" font-size="13" fill="#444">Reporter: dev01</text>
+    <text x="890" y="410" font-family="Segoe UI, Arial" font-size="13" fill="#444">Status: Open</text>
+  </g>
+</svg>
